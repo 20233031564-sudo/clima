@@ -6,7 +6,13 @@ const historyDiv = document.getElementById("history");
 const myLocationBtn = document.getElementById("myLocation");
 // ⛅ Sua API KEY aqui:
 const API_KEY = '36cbd44c7482f73178977c837667bdd8'; 
+let map = L.map('map').setView([0, 0], 2);
 
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap'
+}).addTo(map);
+
+let marker;
 // Converter Kelvin para Celsius
 function kelvinToCelsius(kelvin) {
   return (kelvin - 273.15).toFixed(1);
@@ -22,6 +28,16 @@ function displayWeather(data) {
     <p>Clima: ${weather[0].description}</p>
     <img src="https://openweathermap.org/img/wn/${weather[0].icon}@2x.png" alt="Ícone do clima" />
   `;
+  const lat = data.coord.lat;
+const lon = data.coord.lon;
+
+map.setView([lat, lon], 10);
+
+if (marker) {
+  marker.remove();
+}
+
+marker = L.marker([lat, lon]).addTo(map);
 }
 
 // Salvar no localStorage
